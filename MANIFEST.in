@@ -1,0 +1,4 @@
+include requirements-lock.txt
+recursive-include settings/ *
+prune dev
+prune tmp
