@@ -1,0 +1,17 @@
+[default.logging]
+version = 1
+
+[default.logging.formatters.detailed]
+format = "%(asctime)s %(levelname)-8s [%(filename)s:%(lineno)s] %(message)s"
+
+[default.logging.loggers.service]
+handlers = ["service"]
+level = "DEBUG"
+
+[default.logging.handlers.service]
+class = "logging.handlers.RotatingFileHandler"
+filename = "/var/log/kreoshine/kreo_products/service.log"
+maxBytes = 10485760
+backupCount = 4
+formatter = "detailed"
+level = "DEBUG"
