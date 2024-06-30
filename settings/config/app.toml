@@ -3,3 +3,9 @@ access_log_format = "%a %{X-Real-IP}i %t \"%r\" %s %b \"%{User-Agent}i\" %D"
 host = "127.0.0.1"
 port = 8081
 client_max_size_bytes = "5242880"
+
+[development.app.endpoints]
+products = '/api/products'
+
+[production.app.endpoints]
+products = '/products'

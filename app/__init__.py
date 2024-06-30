@@ -7,6 +7,9 @@ import sys
 
 from aiohttp import web
 
+from app.api.views import ProductsView
+from db.dao import DAOProducts
+
 try:
     from dev.utils import log_utils
 except ImportError:
@@ -36,7 +39,14 @@ def __configure_logging() -> None:
             return
         logger.critical("Uncaught exception!", exc_info=(exc_type, exc_value, exc_traceback))
 
+    logger.info("Deploy mode: %s", config.deploy.mode)
     sys.excepthook = _handle_exception
+
+
+async def __init_dao(app: web.Application):
+    dao_products = DAOProducts()
+    logger.debug("DAO for products created")
+    app['dao_products'] = dao_products
 
 
 def create_app() -> web.Application:
@@ -47,6 +57,15 @@ def create_app() -> web.Application:
         logger=logger,
         client_max_size=config.app.client_max_size_bytes,
     )
+    app.on_startup.append(__init_dao)
+
+    routes_definition = (
+        web.view(config.app.endpoints.products, ProductsView),
+    )
+
+    app.add_routes(routes_definition)
+
+    logger.debug(f"registered resources: {[resource.get_info().get('path') for resource in app.router.resources()]}")
 
     logger.info("Instance of web-application successfully created")
     return app
