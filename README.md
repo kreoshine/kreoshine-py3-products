@@ -3,9 +3,9 @@
 
 Current project is based on:
 
-- `aiohttp` — asynchronous framework (https://docs.aiohttp.org/)
-- `dynaconf` — library to manage configuration (https://www.dynaconf.com/)
+- [`aiohttp`](https://docs.aiohttp.org/) — asynchronous framework
+- [`dynaconf`](https://www.dynaconf.com/) — library to manage configuration
 
 
 ## Notes
-See `dev/notes.md` for more info about project 
+See [dev/notes.md](https://github.com/kreoshine/kreoshine-py3-products/blob/develop/dev/notes.md) for more info about project 
