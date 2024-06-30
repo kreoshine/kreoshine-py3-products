@@ -28,5 +28,6 @@ config = LazySettings(
     validators=[
         Validator("app.port", gt=1024),
         Validator("app.host", eq="127.0.0.1"),
+        Validator("app.endpoints.products", eq="/products", env='PRODUCTION'),
     ]
 )
