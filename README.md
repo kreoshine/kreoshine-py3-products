@@ -5,6 +5,7 @@ Current project is based on:
 
 - [`aiohttp`](https://docs.aiohttp.org/) — asynchronous framework
 - [`alembic`](https://alembic.sqlalchemy.org/) — lightweight database migration tool
+- [`cerberus`](https://docs.python-cerberus.org/) — library for validation
 - [`dynaconf`](https://www.dynaconf.com/) — library to manage configuration
 - [`psycopg`](https://www.psycopg.org/) — PostgreSQL adapter for the python (version 3.x)
 - [`SQLAlchemy`](https://docs.sqlalchemy.org/) — SQL toolkit and object relational mapper
