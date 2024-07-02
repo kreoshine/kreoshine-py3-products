@@ -4,6 +4,7 @@
 Current project is based on:
 
 - [`aiohttp`](https://docs.aiohttp.org/) — asynchronous framework
+- [`cerberus`](https://docs.python-cerberus.org/) — library for validation
 - [`dynaconf`](https://www.dynaconf.com/) — library to manage configuration
 
 
