@@ -23,7 +23,7 @@ config = LazySettings(
     merge_enabled=True,  # allow to merge settings (e.g. from [default] layer)
 
     load_dotenv=True,  # read a '.env' file
-    env_switcher='ENV',  # set variable name for applying environment
+    env_switcher='KREOSHINE_ENV',  # set variable name for applying environment
     envvar_prefix='KREOSHINE',  # all environment variables start with this prefix
     validators=[
         Validator("app.port", gt=1024),
