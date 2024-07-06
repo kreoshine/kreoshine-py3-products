@@ -23,29 +23,15 @@ and perform command:
 pip install -e .
 ```
 
+Start environment in Docker (version >=1.5-2)
+``` bash
+start_dev_environment_in_background
+```
+
 Now application can be started:
 ``` bash
 start
 ```
-
-### Environment
-Docker version: 1.5-2
-
-Change working directory
-``` bash
-cd dev/
-```
-
-Start containers
-``` bash
-docker compose -f ./docker-compose.yml up
-```
-
-and run it in the background with -d (--detach) option
-``` bash
-docker compose -f ./docker-compose.yml up --detach
-```
-
 
 ## How to build
 
