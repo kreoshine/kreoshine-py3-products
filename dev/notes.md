@@ -33,6 +33,22 @@ Now application can be started:
 start
 ```
 
+## Database naming convention
+- Use underscore_names instead of CamelCase
+- Table names should be plural
+- Spell out id fields (item_id instead of id)
+- Don't use ambiguous column names
+- Try to name foreign key columns the same as the columns they refer to
+
+explanation [why](https://www.baeldung.com/sql/database-table-column-naming-conventions)
+
+### Creation new revisions
+- manually (sure that CWD is 'PROJECT_ROOT_PATH/db')
+```bash
+alembic -n 'public' revision --message 'message string to use with revision'
+```
+Note: prefer to make ordered versions for revisions (oldest at the end)
+
 ## How to build
 
 Sure that your environment with 'build'

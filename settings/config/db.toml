@@ -1,0 +1,6 @@
+[default.db]
+driver='postgresql+psycopg'
+host='localhost'
+user='postgres'
+password='postgres'
+database_name='kreo_products'

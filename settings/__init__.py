@@ -16,6 +16,7 @@ config = LazySettings(
 
     settings_files=[
         'config/app.toml',
+        'config/db.toml',
         'config/deploy.toml',
         'config/logging.toml',
     ],

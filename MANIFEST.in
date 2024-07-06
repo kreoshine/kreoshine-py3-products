@@ -1,4 +1,6 @@
 include requirements.txt
+recursive-include db/ *
 recursive-include settings/ *
 prune dev
+prune test
 prune tmp
