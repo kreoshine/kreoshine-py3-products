@@ -8,6 +8,7 @@ Current project is based on:
 - [`dynaconf`](https://www.dynaconf.com/) — library to manage configuration
 - [`psycopg`](https://www.psycopg.org/) — PostgreSQL adapter for the python (version 3.x)
 - [`SQLAlchemy`](https://docs.sqlalchemy.org/) — SQL toolkit and object relational mapper
+- [`sqlalchemy-utils`](https://sqlalchemy-utils.readthedocs.io/) — utility functions for SQLAlchemy
 
 
 ## Notes

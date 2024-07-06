@@ -3,3 +3,4 @@ alembic
 dynaconf
 psycopg[binary,pool]
 SQLAlchemy[asyncio]
+sqlalchemy-utils
