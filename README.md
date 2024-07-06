@@ -5,6 +5,7 @@ Current project is based on:
 
 - [`aiohttp`](https://docs.aiohttp.org/) — asynchronous framework
 - [`dynaconf`](https://www.dynaconf.com/) — library to manage configuration
+- [`SQLAlchemy`](https://docs.sqlalchemy.org/) — SQL toolkit and object relational mapper
 
 
 ## Notes
