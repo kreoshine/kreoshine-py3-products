@@ -1,4 +1,5 @@
 aiohttp
 alembic
 dynaconf
+psycopg[binary,pool]
 SQLAlchemy[asyncio]
