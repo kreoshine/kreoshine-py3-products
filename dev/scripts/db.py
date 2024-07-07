@@ -2,18 +2,23 @@
 Database scripts
 """
 import subprocess
+from pathlib import Path
 
 from psycopg.errors import DuplicateDatabase
-from sqlalchemy import Inspector, create_engine
 from sqlalchemy.exc import ProgrammingError
 from sqlalchemy_utils import create_database
 
-from dev.utils.base_utils import get_tmp_dir_path
 from settings import ALEMBIC_INI_PATH, DB_PATH
-from tests.utils.db import get_dev_database_url
 
 
-def _create_database_if_not_exist(database_url):
+def create_dev_database(database_url: str) -> None:
+    """ Creates database for development
+
+    Note: database will be created if not already exists
+
+    Args:
+        database_url: 
+    """
     try:
         create_database(database_url)
     except ProgrammingError as err:
@@ -23,42 +28,36 @@ def _create_database_if_not_exist(database_url):
             raise
 
 
-def _perform_migration(database_url):
-    tmp_dir_path = get_tmp_dir_path()
-    tmp_alembic_ini_path = tmp_dir_path / 'alembic.ini'
+def upgrade_migrations_to_head(database_url: str, dev_alembic_location: Path | str):
+    """ Performs migration for database
+
+    Note: original alembic.ini file will be copied and modified
+
+    Args:
+        database_url: 
+        dev_alembic_location: directory to be used for creation alembic.ini file
+    """
+    dev_alembic_ini_path = dev_alembic_location / 'alembic.ini'
     public_script_location_path = DB_PATH / 'migrations/public'
     subprocess.call(
-        f"cp {ALEMBIC_INI_PATH} {tmp_alembic_ini_path}",
+        f"cp {ALEMBIC_INI_PATH} {dev_alembic_ini_path}",
         shell=True,
     )
-    command_to_execute = str(
+    update_dev_alembic_command = str(
         'sed -i '
         '-e "s|sqlalchemy.url.*|sqlalchemy.url = {DATABASE_URL}|" '
         '-e "s|script_location = migrations/public|script_location = {PUBLIC_SCRIPT_LOCATION_PATH}|" '
         '{TMP_ALEMBIC_INI_PATH}').format(
         DATABASE_URL=database_url,
-        TMP_ALEMBIC_INI_PATH=tmp_alembic_ini_path,
+        TMP_ALEMBIC_INI_PATH=dev_alembic_ini_path,
         PUBLIC_SCRIPT_LOCATION_PATH=public_script_location_path,
     )
     subprocess.call(
-        command_to_execute,
+        update_dev_alembic_command,
         shell=True,
     )
     subprocess.call(
-        f"alembic -c {tmp_alembic_ini_path} -n public upgrade head",
+        f"alembic -c {dev_alembic_ini_path} -n public upgrade head",
         shell=True,
     )
 
-
-def create_dev_database() -> None:
-    """ Creates database """
-    database_url = get_dev_database_url(dbname_suffix=False)
-    print(f"database URL: {database_url}")
-
-    _create_database_if_not_exist(database_url)
-    _perform_migration(database_url)
-
-    engine = create_engine(database_url)
-    with engine.connect() as conn:
-        inspector = Inspector(conn)
-        assert 'products' in inspector.get_table_names()
