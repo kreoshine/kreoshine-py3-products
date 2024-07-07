@@ -2,18 +2,16 @@
 Model of 'products' table
 """
 from sqlalchemy import (
-    Table,
-    Column, PrimaryKeyConstraint,
+    Table, Column,
     UUID, String,
 )
 
 from db import metadata
 
-Products = Table(
+Product = Table(
     'products',
     metadata,
-    Column('product_id', UUID),
+    Column('product_id', UUID, primary_key=True),
     Column('name', String),
     Column('type', String),
-    PrimaryKeyConstraint('product_id', name='products__product_id__pkey'),
 )
