@@ -23,8 +23,8 @@ def _test_database_url() -> str:
     Note: random string adds for the database name
     """
     database_name_suffix = '-' + ''.join(choice(hexdigits) for i in range(5))
-    return '{driver}://{username}:{password}@{host}:{port}/{database}'.format(
-        driver=config.db.driver,
+    return '{driver_name}://{username}:{password}@{host}:{port}/{database}'.format(
+        driver_name=f"{config.db.driver}+{config.db.dialect}",
         username=config.db.username,
         password=config.db.password,
         host=config.db.host,
