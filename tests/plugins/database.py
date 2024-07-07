@@ -23,11 +23,12 @@ def _test_database_url() -> str:
     Note: some uuid is
     """
     database_name_suffix = ''.join(choice(hexdigits) for i in range(5))
-    return '{driver}://{user}:{password}@{host}/{database}'.format(
+    return '{driver}://{username}:{password}@{host}:{port}/{database}'.format(
         driver=config.db.driver,
-        user=config.db.user,
+        username=config.db.username,
         password=config.db.password,
         host=config.db.host,
+        port=config.db.port,
         database=config.db.database_name + database_name_suffix,
     )
 

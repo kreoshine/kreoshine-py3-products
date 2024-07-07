@@ -1,6 +1,7 @@
 [default.db]
 driver='postgresql+psycopg'
 host='localhost'
-user='postgres'
+port='5432'
+username='postgres'
 password='postgres'
 database_name='kreo_products'
