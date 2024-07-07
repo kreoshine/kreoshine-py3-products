@@ -1,19 +1,14 @@
 """
 Database plugin
 """
-from random import choice
-from string import hexdigits
 from typing import Callable
 
 import pytest
 from alembic.config import Config as AlembicConfig
 from sqlalchemy_utils import create_database, drop_database
 
-from settings import PROJECT_ROOT_PATH, config
-
-
-DB_PATH = PROJECT_ROOT_PATH / 'db/'
-ALEMBIC_INI_PATH = DB_PATH / 'alembic.ini'
+from settings import DB_PATH, ALEMBIC_INI_PATH
+from tests.utils.db import get_dev_database_url
 
 
 @pytest.fixture(scope='session')
@@ -22,15 +17,7 @@ def _test_database_url() -> str:
 
     Note: random string adds for the database name
     """
-    database_name_suffix = '-' + ''.join(choice(hexdigits) for i in range(5))
-    return '{driver_name}://{username}:{password}@{host}:{port}/{database}'.format(
-        driver_name=f"{config.db.driver}+{config.db.dialect}",
-        username=config.db.username,
-        password=config.db.password,
-        host=config.db.host,
-        port=config.db.port,
-        database=config.db.database_name + database_name_suffix,
-    )
+    return get_dev_database_url()
 
 
 @pytest.fixture(scope='session')

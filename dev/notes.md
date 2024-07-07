@@ -23,10 +23,11 @@ and perform command:
 pip install -e .
 ```
 
-Start environment in Docker (version >=1.5-2)
+Start dev environment
 ``` bash
-start_dev_environment_in_background
+start_dev_environment
 ```
+Note: Docker version >=1.5-2
 
 Now application can be started:
 ``` bash
