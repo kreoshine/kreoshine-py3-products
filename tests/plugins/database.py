@@ -20,9 +20,9 @@ ALEMBIC_INI_PATH = DB_PATH / 'alembic.ini'
 def _test_database_url() -> str:
     """ Fixture. Prepares database URL for testing
 
-    Note: some uuid is
+    Note: random string adds for the database name
     """
-    database_name_suffix = ''.join(choice(hexdigits) for i in range(5))
+    database_name_suffix = '-' + ''.join(choice(hexdigits) for i in range(5))
     return '{driver}://{username}:{password}@{host}:{port}/{database}'.format(
         driver=config.db.driver,
         username=config.db.username,
@@ -40,8 +40,10 @@ def created_database(_test_database_url) -> None:
     Teardown effect:
         - dropping created database
     """
+    print(f"create db: {_test_database_url}")
     create_database(_test_database_url)
     yield
+    print(f"drop db: {_test_database_url}")
     drop_database(_test_database_url)
 
 
