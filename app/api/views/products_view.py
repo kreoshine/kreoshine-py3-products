@@ -43,4 +43,5 @@ class ProductsView(View):
         products_info = await self._dao_products.get_list_by_filter(
             requested_fields=query_params[const.query.keys.FIELDS],
         )
+        logger.debug(products_info)
         return json_response(products_info)

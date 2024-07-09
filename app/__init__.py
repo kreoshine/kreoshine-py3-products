@@ -6,9 +6,11 @@ import logging.config
 import sys
 
 from aiohttp import web
+from sqlalchemy.ext.asyncio import create_async_engine
 
 from app.api.views import ProductsView
 from db.dao import DAOProducts
+from db.utils import get_database_url
 
 try:
     from dev.utils import log_utils
@@ -44,9 +46,17 @@ def __configure_logging() -> None:
 
 
 async def __init_dao(app: web.Application):
-    dao_products = DAOProducts()
+    engine = create_async_engine(url=get_database_url())
+    app['engine'] = engine
+
+    dao_products = DAOProducts(engine)
     logger.debug("DAO for products created")
     app['dao_products'] = dao_products
+
+
+async def _stop_service_components(app: web.Application):
+    logger.debug("Clode engine")
+    await app['engine'].dispose()
 
 
 def create_app() -> web.Application:
@@ -58,6 +68,7 @@ def create_app() -> web.Application:
         client_max_size=config.app.client_max_size_bytes,
     )
     app.on_startup.append(__init_dao)
+    app.on_shutdown.append(_stop_service_components)
 
     routes_definition = (
         web.view(config.app.endpoints.products, ProductsView),
