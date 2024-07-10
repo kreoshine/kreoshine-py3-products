@@ -44,8 +44,8 @@ def _test_database_url() -> str:
 
 
 @pytest.fixture(scope='session')
-def created_database(_test_database_url) -> None:
-    """ Fixture. Prepares database creation
+def created_database(_test_database_url: str) -> None:
+    """ Fixture. Creates database by test database URL
 
     Teardown effect:
         - dropping created database
@@ -58,13 +58,14 @@ def created_database(_test_database_url) -> None:
 
 
 @pytest.fixture(scope='module')
-def get_alembic_config(created_database, _test_database_url) -> Callable:
+def create_alembic_config(created_database, _test_database_url: str) -> Callable:
     """ Parameterized fixture.
-    Result function gets 'alembic' config for specified section of alembic.ini with bounding to database URL
+    Result function creates 'alembic' config for specified section of alembic.ini with bounding to database URL
 
     Args:
         created_database: created database fixture
-        _test_database_url: database URL fixture
+        _test_database_url: database URL fixture,
+            note: URL must be string to provide password as is
 
     Real params:
         section_name: section of alembic.ini
@@ -72,7 +73,7 @@ def get_alembic_config(created_database, _test_database_url) -> Callable:
     Returns:
         function for getting alembic config
     """
-    def _get_alembic_config(section_name):
+    def _create_alembic_config(section_name):
         alembic_config = AlembicConfig(
             file_=ALEMBIC_INI_PATH,
             ini_section=section_name,
@@ -86,4 +87,4 @@ def get_alembic_config(created_database, _test_database_url) -> Callable:
         alembic_config.set_main_option('sqlalchemy.url', _test_database_url)
 
         return alembic_config
-    return _get_alembic_config
+    return _create_alembic_config

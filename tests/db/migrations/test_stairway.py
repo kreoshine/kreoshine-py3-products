@@ -9,7 +9,7 @@ from alembic.script import ScriptDirectory
 from alembic.script.revision import Revision
 
 
-def get_revisions(alembic_config: Config) -> List[Revision]:
+def _get_revisions(alembic_config: Config) -> List[Revision]:
     """ Gets revisions for alembic config
 
     Args:
@@ -26,12 +26,12 @@ def get_revisions(alembic_config: Config) -> List[Revision]:
     return revisions
 
 
-def tests_db_migrations__stairway(get_alembic_config):
+def tests_db_migrations__stairway(create_alembic_config):
     """
     Performs stairway test for all migrations
     """
-    alembic_config = get_alembic_config(section_name='public')
-    revisions = get_revisions(alembic_config)
+    alembic_config = create_alembic_config(section_name='public')
+    revisions = _get_revisions(alembic_config)
     for revision in revisions:
         upgrade(alembic_config, revision.revision)
 
