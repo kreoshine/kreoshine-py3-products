@@ -1,11 +1,20 @@
 """
 TODO
 """
+import subprocess
+
 from sqlalchemy import create_engine, Inspector
 
 from dev.utils.db_utils import create_dev_database, upgrade_migrations_to_head
-from dev.scripts.docker import up_docker_compose_with_detach_option
+from settings import PROJECT_ROOT_PATH
 from tests.plugins.database import get_database_url
+
+
+def up_docker_compose_with_detach_option():
+    """ Performs command to start containers (described in 'compose' file) in the background """
+    command_to_execute = f"docker compose -f {PROJECT_ROOT_PATH / 'dev/docker-compose.yml'} up --detach"
+    print(f"--> {command_to_execute}")
+    subprocess.call(command_to_execute, shell=True)
 
 
 def perform_dev_deploy():
