@@ -1,5 +1,5 @@
 """
-Module with stairway-testing
+Module with stairway-testing of migrations
 """
 from typing import List
 
@@ -7,6 +7,8 @@ from alembic.command import upgrade, downgrade
 from alembic.config import Config
 from alembic.script import ScriptDirectory
 from alembic.script.revision import Revision
+
+from tests.plugins.database import FixtureToCreateAlembicConfig
 
 
 def _get_revisions(alembic_config: Config) -> List[Revision]:
@@ -26,12 +28,15 @@ def _get_revisions(alembic_config: Config) -> List[Revision]:
     return revisions
 
 
-def tests_db_migrations__stairway(create_alembic_config):
+def tests_db_migrations__stairway(create_alembic_config: FixtureToCreateAlembicConfig):
     """
     Performs stairway test for all migrations
     """
+    # ARRANGE
     alembic_config = create_alembic_config(section_name='public')
     revisions = _get_revisions(alembic_config)
+
+    # ACT/ASSERT
     for revision in revisions:
         upgrade(alembic_config, revision.revision)
 

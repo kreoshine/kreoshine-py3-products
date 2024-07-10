@@ -3,7 +3,8 @@ Database plugin
 """
 from random import choice
 from string import ascii_uppercase, digits
-from typing import Callable
+from types import NoneType
+from typing import Protocol
 
 import pytest
 from alembic.config import Config as AlembicConfig
@@ -57,8 +58,17 @@ def created_database(_test_database_url: str) -> None:
     drop_database(_test_database_url)
 
 
+class FixtureToCreateAlembicConfig(Protocol):
+    """ Type of 'create alembic config' fixture
+
+    Call params:
+        section_name: section of alembic.ini to be used for creation
+    """
+    def __call__(self, section_name: str) -> AlembicConfig: ...
+
+
 @pytest.fixture(scope='module')
-def create_alembic_config(created_database, _test_database_url: str) -> Callable:
+def create_alembic_config(created_database: NoneType, _test_database_url: str) -> FixtureToCreateAlembicConfig:
     """ Parameterized fixture.
     Result function creates 'alembic' config for specified section of alembic.ini with bounding to database URL
 
@@ -66,9 +76,6 @@ def create_alembic_config(created_database, _test_database_url: str) -> Callable
         created_database: created database fixture
         _test_database_url: database URL fixture,
             note: URL must be string to provide password as is
-
-    Real params:
-        section_name: section of alembic.ini
 
     Returns:
         function for getting alembic config
