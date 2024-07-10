@@ -4,13 +4,17 @@ Database plugin
 from random import choice
 from string import ascii_uppercase, digits
 from types import NoneType
-from typing import Protocol
+from typing import Protocol, List
 
 import pytest
-from alembic.config import Config as AlembicConfig
+from alembic.config import Config as AlembicConfig, Config
+from alembic.script import ScriptDirectory
+from alembic.script.revision import Revision
 from sqlalchemy_utils import create_database, drop_database
 
-from settings import config, ALEMBIC_INI_PATH, DB_PATH
+from settings import config, PROJECT_ROOT_PATH
+
+DB_PATH = PROJECT_ROOT_PATH / 'db/'
 
 
 def get_database_url(enrich_dbname_with_suffix: bool = False) -> str:
@@ -18,7 +22,6 @@ def get_database_url(enrich_dbname_with_suffix: bool = False) -> str:
 
     Args:
         enrich_dbname_with_suffix: boolean reflecting need to add 'test' suffix for database name, by default False
-
     Returns:
         database URL as string
     """
@@ -37,7 +40,7 @@ def get_database_url(enrich_dbname_with_suffix: bool = False) -> str:
 
 @pytest.fixture(scope='session')
 def _test_database_url() -> str:
-    """ Fixture. Provides database URL for testing
+    """ Fixture provides database URL for testing
 
     Note: random string adds for the database name
     """
@@ -45,9 +48,11 @@ def _test_database_url() -> str:
 
 
 @pytest.fixture(scope='session')
-def created_database(_test_database_url: str) -> None:
-    """ Fixture. Creates database by test database URL
+def _created_test_database(_test_database_url: str) -> None:
+    """ Fixture creates test database
 
+    Args:
+        _test_database_url: database URL for creation
     Teardown effect:
         - dropping created database
     """
@@ -56,6 +61,28 @@ def created_database(_test_database_url: str) -> None:
     yield
     print(f"drop db: {_test_database_url}")
     drop_database(_test_database_url)
+
+
+def create_enrich_alembic_config(database_url: str, section_name: str) -> AlembicConfig:
+    """ Creates config for alembic and enrich it with passed args
+
+    Args:
+        database_url: database URL to apply for config
+        section_name: name of the section for selecting migration scripts` location to be expanded to full path
+    """
+    alembic_config = AlembicConfig(
+        file_=DB_PATH / 'alembic.ini',
+        ini_section=section_name,
+    )
+
+    # apply absolute path to migration scripts
+    alembic_location = alembic_config.get_main_option('script_location')
+    alembic_config.set_main_option('script_location', str(DB_PATH / alembic_location))
+
+    # bound database URL
+    alembic_config.set_main_option('sqlalchemy.url', database_url)
+
+    return alembic_config
 
 
 class FixtureToCreateAlembicConfig(Protocol):
@@ -68,30 +95,40 @@ class FixtureToCreateAlembicConfig(Protocol):
 
 
 @pytest.fixture(scope='module')
-def create_alembic_config(created_database: NoneType, _test_database_url: str) -> FixtureToCreateAlembicConfig:
-    """ Parameterized fixture.
-    Result function creates 'alembic' config for specified section of alembic.ini with bounding to database URL
+def create_test_alembic_config(
+        _created_test_database: NoneType,
+        _test_database_url: str,
+) -> FixtureToCreateAlembicConfig:
+    """ Fixture prepares function which creates 'enrich' config of Alembic
 
     Args:
-        created_database: created database fixture
+        _created_test_database: created database fixture
         _test_database_url: database URL fixture,
             note: URL must be string to provide password as is
 
     Returns:
         function for getting alembic config
     """
-    def _create_alembic_config(section_name):
-        alembic_config = AlembicConfig(
-            file_=ALEMBIC_INI_PATH,
-            ini_section=section_name,
+    def _create_test_alembic_config(section_name):
+        return create_enrich_alembic_config(
+            database_url=_test_database_url,
+            section_name=section_name,
         )
+    return _create_test_alembic_config
 
-        # apply absolute path to alembic directory
-        alembic_location = alembic_config.get_main_option('script_location')
-        alembic_config.set_main_option('script_location', str(DB_PATH / alembic_location))
 
-        # bound database URL
-        alembic_config.set_main_option('sqlalchemy.url', _test_database_url)
+def get_revisions(alembic_config: Config) -> List[Revision]:
+    """ Gets revisions specified in config of Alembic
 
-        return alembic_config
-    return _create_alembic_config
+    Args:
+        alembic_config: Alembic config to be used for retrieving
+    Returns:
+        list of ordered revisions (from first to last)
+    """
+    # get directory object with Alembic migrations
+    revisions_dir = ScriptDirectory.from_config(alembic_config)
+
+    # get & sort migrations
+    revisions = list(revisions_dir.walk_revisions('base', 'heads'))
+    revisions.reverse()
+    return revisions

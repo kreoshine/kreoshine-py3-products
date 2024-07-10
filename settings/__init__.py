@@ -11,9 +11,6 @@ from dynaconf import LazySettings, Validator
 
 PROJECT_ROOT_PATH = Path(os.path.abspath(__file__)).parents[1]
 
-# extra paths (dev need)
-DB_PATH = PROJECT_ROOT_PATH / 'db/'
-ALEMBIC_INI_PATH = DB_PATH / 'alembic.ini'
 
 config = LazySettings(
     root_path=Path(os.path.abspath(__file__)).parent,

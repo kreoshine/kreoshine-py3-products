@@ -1,22 +1,36 @@
 """
 Database utilities
 """
-from alembic.config import Config as AlembicConfig
+from alembic.command import upgrade
+from psycopg.errors import DuplicateDatabase
+from sqlalchemy.exc import ProgrammingError
+from sqlalchemy_utils import create_database
 
-from settings import DB_PATH, ALEMBIC_INI_PATH
+from tests.plugins.database import create_enrich_alembic_config, get_revisions
 
 
-def get_alembic_config(section_name, database_url: str):
-    alembic_config = AlembicConfig(
-        file_=ALEMBIC_INI_PATH,
-        ini_section=section_name,
-    )
+def upgrade_migrations_to_head(database_url: str, schema: str):
+    """ TODO """
+    alembic_config = create_enrich_alembic_config(database_url, section_name=schema)
+    revisions = get_revisions(alembic_config)
+    for revision in revisions:
+        upgrade(alembic_config, revision.revision)
 
-    # apply absolute path to alembic directory
-    alembic_location = alembic_config.get_main_option('script_location')
-    alembic_config.set_main_option('script_location', str(DB_PATH / alembic_location))
 
-    # bound database URL
-    alembic_config.set_main_option('sqlalchemy.url', database_url)
+def create_dev_database(database_url: str) -> None:
+    """ Creates database for development
 
-    return alembic_config
+    Note: database will be created if not already exists
+
+    Args:
+        database_url: todo
+    Raises:
+        ProgrammingError: todo
+    """
+    try:
+        create_database(database_url)
+    except ProgrammingError as err:
+        if DuplicateDatabase.__name__ in str(err):
+            print(err)
+        else:
+            raise

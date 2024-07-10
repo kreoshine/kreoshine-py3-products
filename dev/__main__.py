@@ -3,9 +3,8 @@ TODO
 """
 from sqlalchemy import create_engine, Inspector
 
-from dev.scripts.db import create_dev_database, upgrade_migrations_to_head
+from dev.utils.db_utils import create_dev_database, upgrade_migrations_to_head
 from dev.scripts.docker import up_docker_compose_with_detach_option
-from dev.utils.base_utils import get_tmp_dir_path
 from tests.plugins.database import get_database_url
 
 
@@ -16,10 +15,9 @@ def perform_dev_deploy():
     print(f"database URL: {database_url}")
 
     create_dev_database(database_url)
-    upgrade_migrations_to_head(
-        database_url,
-        dev_alembic_location=get_tmp_dir_path(),
-    )
+    schemas_to_upgrade = ['public']  # note: section names in alembic.ini
+    for schema in schemas_to_upgrade:
+        upgrade_migrations_to_head(database_url, schema)
 
     engine = create_engine(database_url)
     with engine.connect() as conn:
