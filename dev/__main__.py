@@ -1,5 +1,5 @@
 """
-TODO
+Development deploy running module
 """
 import subprocess
 from time import sleep
@@ -7,7 +7,7 @@ from time import sleep
 from sqlalchemy import create_engine, inspect
 
 from dev import BC
-from dev.utils.db_utils import create_dev_database, upgrade_migrations_to_head
+from dev.utils.db_utils import create_dev_database, upgrade_to_head_migration
 from settings import PROJECT_ROOT_PATH
 from tests.plugins.database import get_database_url
 
@@ -34,7 +34,11 @@ def provide_pause(seconds: int) -> None:
 
 
 def perform_dev_deploy():
-    """ todo """
+    """ Performs deploy for development:
+    - creation and running necessary containers
+    - creation database if necessary
+    - migration to HEAD for all schemas
+    """
     print(f"{BC.HEADER}START CREATION DEV ENVIRONMENT{BC.ENDC}")
     up_docker_compose_with_detach_option()
     provide_pause(seconds=3)
@@ -43,7 +47,7 @@ def perform_dev_deploy():
     create_dev_database(database_url)
     schemas_to_upgrade = ['public']  # note: section names in alembic.ini
     for schema in schemas_to_upgrade:
-        upgrade_migrations_to_head(database_url, schema)
+        upgrade_to_head_migration(database_url, schema)
 
     engine = create_engine(database_url)
     with engine.connect() as conn:
