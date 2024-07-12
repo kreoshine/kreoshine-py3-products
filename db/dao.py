@@ -23,10 +23,13 @@ class ProductsDAO:
         self._engine = engine
 
     @property
-    def _product_attributes_mapper(self) -> dict[str, QueryableAttribute]:
+    def _product_columns_mapper(self) -> dict[str, QueryableAttribute]:
         return {
-            Product.name.key: Product.name,
-            Product.type.key: Product.type,
+            column_name: column for column_name, column
+            in zip(
+                Product.metadata.tables['products'].columns.keys(),
+                Product.metadata.tables['products'].columns
+            )
         }
 
     async def query(
@@ -35,10 +38,10 @@ class ProductsDAO:
     ) -> List[dict]:
         """ todo """
         if query_fields:
-            query_attrs = (self._product_attributes_mapper[field] for field in query_fields)
-            stmt = select(*query_attrs)
+            query_columns = (self._product_columns_mapper[column_name] for column_name in query_fields)
+            stmt = select(*query_columns)
         else:
-            query_fields = self._product_attributes_mapper.keys()
+            query_fields = self._product_columns_mapper.keys()
             stmt = select(Product)
 
         async with self._engine.connect() as conn:
