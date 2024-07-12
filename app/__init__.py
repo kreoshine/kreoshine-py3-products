@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 
 import db
 from app.api.views import ProductsView
-from db.dao import DAOProducts
+from db.dao import ProductsDAO
 
 try:
     from dev.utils import log_utils
@@ -49,9 +49,9 @@ async def __init_dao(app: web.Application):
     engine = db.get_async_engine()
     app['engine'] = engine
 
-    dao_products = DAOProducts(engine)
+    products_dao = ProductsDAO(engine)
     logger.debug("DAO for products created")
-    app['dao_products'] = dao_products
+    app['products_dao'] = products_dao
 
 
 async def _stop_service_components(app: web.Application):

@@ -41,7 +41,7 @@ start
 - Don't use ambiguous column names
 - Try to name foreign key columns the same as the columns they refer to
 
-explanation [why](https://www.baeldung.com/sql/database-table-column-naming-conventions)
+explanation [why](https://dev.to/ovid/database-naming-standards-2061)
 
 ### Creation new revisions
 - manually (sure that CWD is 'PROJECT_ROOT_PATH/db')

@@ -1,5 +1,5 @@
 """
 Package with constants related to query string
 """
-import app.api.const.query.keys
+from app.api.const.query.keys import FIELDS
 import app.api.const.query.values

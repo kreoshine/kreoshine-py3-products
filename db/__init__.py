@@ -3,10 +3,16 @@ Package with database logic
 """
 from sqlalchemy import MetaData, URL
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
+from sqlalchemy.orm import DeclarativeBase
 
 from settings import config
 
 metadata = MetaData()
+
+
+class BaseModel(DeclarativeBase):
+    """ Base class for models"""
+    metadata = metadata
 
 
 def get_database_url() -> URL:
