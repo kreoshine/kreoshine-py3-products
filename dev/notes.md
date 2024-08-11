@@ -25,7 +25,7 @@ pip install -e .
 
 Start dev environment
 ``` bash
-start_dev_environment
+perform_dev_deploy
 ```
 Note: Docker version >=1.5-2
 
