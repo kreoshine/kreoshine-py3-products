@@ -38,7 +38,7 @@ class ProductsDAO:
     ) -> List[dict]:
         """ todo """
         if query_fields:
-            query_columns = (self._product_columns_mapper[column_name] for column_name in query_fields)
+            query_columns = [self._product_columns_mapper[column_name] for column_name in query_fields]
             stmt = select(*query_columns)
         else:
             query_fields = self._product_columns_mapper.keys()
