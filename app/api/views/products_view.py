@@ -9,7 +9,7 @@ from aiohttp.web_response import Response, json_response
 from app.api import const
 from app.api.helpers import QueryParamsParser
 from app.api.helpers.decorators import rest_view_decorated, rest_handler_decorated
-from app.api.helpers.deserializer import Deserializer
+from app.api.helpers.serialization import custom_dumps
 from app.api.validation.schemas.products import PRODUCTS_QUERY_PARAMS__GET__SCHEMA
 from db.dao import ProductsDAO
 
@@ -45,5 +45,5 @@ class ProductsView(View):
         )
         return json_response(
             products_db_data,
-            dumps=Deserializer()
+            dumps=custom_dumps,
         )
