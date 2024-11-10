@@ -2,25 +2,30 @@
 
 ## How to start
 
-Clone the project
+- Clone the project
 ```bash
 git clone git@github.com:kreoshine/kreoshine-py3-products.git
 ```
 
-Change working directory
+- Change working directory
 ```bash
 cd kreoshine-py3-products
 ```
 
-Then there is a need to create environment-mode for dynaconf in '.env' file
+- Create environment-mode for dynaconf in '.env' file
 ``` bash
 echo 'export KREOSHINE_ENV=DEVELOPMENT' >settings/config/.env
 ```
 
-Create python virtual environment (with pip support, e.g. 'venv' or via 'conda')
-and perform command:
+- Create python virtual environment (with pip support, e.g. 'venv' or via 'conda')
+
+After environment preparation install requirements with fixed version
 ``` bash
 pip install -e .
+```
+and install test requirements:
+``` bash
+pip install -r requirements-test.txt
 ```
 
 Start dev environment
