@@ -10,7 +10,7 @@ from app.api import const
 from app.api.helpers import QueryParamsParser
 from app.api.helpers.decorators import rest_view_decorated, rest_handler_decorated
 from app.api.helpers.serialization import custom_dumps
-from app.api.validation.schemas.products import PRODUCTS_QUERY_PARAMS__GET__SCHEMA
+from app.api.validation.schemas.products_validation_schema import PRODUCTS_QUERY_PARAMS__GET__SCHEMA
 from db.dao import ProductsDAO
 
 logger = logging.getLogger('service')
