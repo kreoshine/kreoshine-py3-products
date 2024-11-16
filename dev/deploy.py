@@ -53,7 +53,3 @@ def perform_dev_deploy():
     with engine.connect() as conn:
         inspector = inspect(conn)
         assert 'products' in inspector.get_table_names()
-
-
-if __name__ == '__main__':
-    perform_dev_deploy()
