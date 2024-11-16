@@ -7,23 +7,24 @@ from alembic.command import upgrade
 from sqlalchemy import create_engine, inspect, make_url
 from sqlalchemy_utils import database_exists, create_database
 
-from dev import BC
+from dev.utils.echo import *
 from settings import PROJECT_ROOT_PATH
 from tests.plugins.database import get_database_url, create_enrich_alembic_config
 
 
 def _up_docker_environment():
     """ Performs command to start containers (described in 'compose' file) """
+    brew_step("Up docker environment")
     command_to_execute = f"docker compose -f {PROJECT_ROOT_PATH / 'dev/docker-compose.yml'} up --detach"
-    print(f"--> {BC.OKCYAN}{command_to_execute}{BC.ENDC}")
+    echo_header(command_to_execute)
     command_stat = subprocess.run(
         command_to_execute, shell=True,
         stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
     )
     if command_stat.returncode:
-        print(f"{BC.FAIL}{command_stat.stdout}{BC.ENDC}")
+        echo_fail(command_stat.stdout)
     else:
-        print(f"{BC.OKGREEN}{command_stat.stdout}{BC.ENDC}")
+        echo_success(command_stat.stdout)
 
 
 def _initialize_database():
@@ -31,19 +32,19 @@ def _initialize_database():
         - creation database if necessary
         - migration to HEAD for all schemas
     """
-    print(f"--> {BC.OKCYAN}CREATE DATABASE{BC.ENDC}")
+    brew_step("create database")
     database_url = get_database_url()  # note: avoid to use make_url here to keep the password in clear text
     database_name = make_url(database_url).database
     if database_exists(database_url):
-        print(f"{BC.OKBLUE}database '{database_name}' already exists{BC.ENDC}")
+        echo_skip(f"database '{database_name}' already exists")
     else:
         create_database(database_url)
-        print(f"{BC.OKGREEN}database '{database_name}' created{BC.ENDC}")
+        echo_success(f"database '{database_name}' created")
 
     schemas_to_upgrade = ['public']  # note: section names in alembic.ini
-    print(f"--> {BC.OKCYAN}database migrations{BC.ENDC}")
+    brew_step("database migrations")
     for schema in schemas_to_upgrade:
-        print(f"{BC.HEADER}perform migration for '{schema}' schema{BC.ENDC}")
+        echo_header(f"perform migration for '{schema}' schema")
         alembic_config = create_enrich_alembic_config(database_url, section_name=schema)
         upgrade(alembic_config, 'head')
 
