@@ -30,9 +30,13 @@ pip install -r requirements-test.txt
 
 Start dev environment
 ``` bash
-perform_dev_deploy
+_dev__up_docker_environment
 ```
 Note: Docker version >=1.5-2
+
+``` bash
+_dev__initialize_database
+```
 
 Now application can be started:
 ``` bash

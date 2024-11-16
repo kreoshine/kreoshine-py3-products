@@ -12,8 +12,8 @@ from settings import PROJECT_ROOT_PATH
 from tests.plugins.database import get_database_url, create_enrich_alembic_config
 
 
-def up_docker_compose_with_detach_option():
-    """ Performs command to start containers (described in 'compose' file) in the background """
+def _up_docker_compose_with_detach_option():
+    """ Performs command to start containers (described in 'compose' file) """
     command_to_execute = f"docker compose -f {PROJECT_ROOT_PATH / 'dev/docker-compose.yml'} up --detach"
     print(f"--> {BC.OKCYAN}{command_to_execute}{BC.ENDC}")
     command_stat = subprocess.run(
@@ -26,8 +26,8 @@ def up_docker_compose_with_detach_option():
         print(f"{BC.OKGREEN}{command_stat.stdout}{BC.ENDC}")
 
 
-def perform_dev_deploy():
-    """ Performs deploy for development:
+def _initialize_database():
+    """ Prepares database for application with next steps:
         - creation database if necessary
         - migration to HEAD for all schemas
     """
