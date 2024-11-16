@@ -2,7 +2,6 @@
 Development deploy running module
 """
 import subprocess
-from time import sleep
 
 from sqlalchemy import create_engine, inspect
 
@@ -16,33 +15,22 @@ def up_docker_compose_with_detach_option():
     """ Performs command to start containers (described in 'compose' file) in the background """
     command_to_execute = f"docker compose -f {PROJECT_ROOT_PATH / 'dev/docker-compose.yml'} up --detach"
     print(f"--> {BC.OKCYAN}{command_to_execute}{BC.ENDC}")
-    command_stat = subprocess.run(command_to_execute, shell=True)
-    command_stat.check_returncode()
-    print(f"Result code: {command_stat.returncode}")
-
-
-def provide_pause(seconds: int) -> None:
-    """ Provides pause
-
-    Args:
-        seconds: seconds to wait
-    """
-    while seconds != 0:
-        print(f"waiting (left {seconds} seconds)")
-        seconds -= 1
-        sleep(1)
+    command_stat = subprocess.run(
+        command_to_execute, shell=True,
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
+    )
+    if command_stat.returncode:
+        print(f"{BC.FAIL}{command_stat.stdout}{BC.ENDC}")
+    else:
+        print(f"{BC.OKGREEN}{command_stat.stdout}{BC.ENDC}")
 
 
 def perform_dev_deploy():
     """ Performs deploy for development:
-    - creation and running necessary containers
-    - creation database if necessary
-    - migration to HEAD for all schemas
+        - creation database if necessary
+        - migration to HEAD for all schemas
     """
     print(f"{BC.HEADER}START CREATION DEV ENVIRONMENT{BC.ENDC}")
-    up_docker_compose_with_detach_option()
-    provide_pause(seconds=3)
-
     database_url = get_database_url()
     create_dev_database(database_url)
     schemas_to_upgrade = ['public']  # note: section names in alembic.ini
