@@ -12,7 +12,7 @@ from settings import PROJECT_ROOT_PATH
 from tests.plugins.database import get_database_url, create_enrich_alembic_config
 
 
-def _up_docker_compose_with_detach_option():
+def _up_docker_environment():
     """ Performs command to start containers (described in 'compose' file) """
     command_to_execute = f"docker compose -f {PROJECT_ROOT_PATH / 'dev/docker-compose.yml'} up --detach"
     print(f"--> {BC.OKCYAN}{command_to_execute}{BC.ENDC}")
