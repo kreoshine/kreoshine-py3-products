@@ -26,6 +26,11 @@ def echo_header(msg: str):
     print(f"{_BC.CORRAL}{msg}{_BC.SIMPLE}")
 
 
+def echo_note(msg: str):
+    """ print message for note """
+    print(f"{_BC.UNDERLINE}{msg}{_BC.SIMPLE}")
+
+
 def echo_fail(msg: str):
     """ print message as fail """
     print(f"{_BC.RED}{msg}{_BC.SIMPLE}")

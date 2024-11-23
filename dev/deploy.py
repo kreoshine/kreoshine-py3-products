@@ -60,6 +60,8 @@ def _initialize_database():
 
 
 def __configure_environment():
+    echo_header("prepare necessary environment for dynaconf")
+
     environment_file_path = PROJECT_ROOT_PATH / "settings/config/.env"
     environment_mode_line = "export KREOSHINE_ENV=DEVELOPMENT"
     try:
@@ -68,6 +70,7 @@ def __configure_environment():
             for line in fp.readlines():
                 if line == environment_mode_line:
                     need_to_add_environment_mode_line = False
+                    echo_skip("necessary environment already prepared")
         is_environment_file_exists = True
     except FileNotFoundError:
         is_environment_file_exists = False
@@ -77,11 +80,16 @@ def __configure_environment():
         mode = 'a+' if is_environment_file_exists else 'w'
         with open(environment_file_path, mode) as fp:
             fp.write(environment_mode_line)
+            echo_success("environment is successfully prepared")
 
 
 def __create_tmp_dir():
+    echo_header("prepare temporary directory")
     if not os.path.exists(TMP_DIR):
         os.mkdir(TMP_DIR)
+        echo_success(f"successfully created directory ({TMP_DIR})")
+    else:
+        print(f"directory already exists ({TMP_DIR})")
 
 
 def __use_tmp_dir_for_logs(need_to_clear_logs: bool = True):
@@ -94,19 +102,24 @@ def __use_tmp_dir_for_logs(need_to_clear_logs: bool = True):
         - clear log files before applying
         - new path definition for logging (PROJECT_DIR/tmp/logs/)
      """
+    echo_header("provide logging in temporary directory")
     assert config.deploy.mode == 'development'
 
     log_dir = TMP_DIR / 'logs'
 
     if os.path.exists(log_dir) and need_to_clear_logs:
+        echo_note(f"remove directory for logs: {log_dir}")
         shutil.rmtree(log_dir)
 
     if not os.path.exists(log_dir):
+        echo_success(f"create directory for logs: {log_dir}")
         os.mkdir(log_dir)
 
     handlers = config.logging['handlers']
     for handler_name, handler_data in handlers.items():
-        handler_data['filename'] = str(log_dir / f'{handler_name}.log')
+        target_log_file_path = log_dir / f'{handler_name}.log'
+        print(f"set '{target_log_file_path}' file for '{handler_name}' handler")
+        handler_data['filename'] = str(target_log_file_path)
 
 
 def _perform_dev_start():
@@ -117,9 +130,11 @@ def _perform_dev_start():
         - creation temporary directory if necessary
         - configuring logging in 'tmp' directory
     """
+    brew_step("development service start")
     __configure_environment()
     __create_tmp_dir()
     __use_tmp_dir_for_logs()
+    echo_header("start service application")
     start_service()
 
 
