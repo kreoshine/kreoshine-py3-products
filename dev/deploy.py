@@ -121,3 +121,9 @@ def _perform_dev_start():
     __create_tmp_dir()
     __use_tmp_dir_for_logs()
     start_service()
+
+
+def perform_dev_deploy():
+    _up_docker_environment()
+    _initialize_database()
+    _perform_dev_start()

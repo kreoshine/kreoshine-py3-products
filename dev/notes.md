@@ -23,20 +23,19 @@ and install test requirements:
 pip install -r requirements-test.txt
 ```
 
-Start dev environment
+finally, perform development deployment
 ``` bash
-_dev__up_docker_environment
-```
-Note: Docker version >=1.5-2
-
-``` bash
-_dev__initialize_database
+perform_dev_deploy
 ```
 
-Now application can be started:
-``` bash
-_dev__start
-```
+#### notes:
+
+- Docker should be installed on the machine (version >=1.5-2) with available docker-compose
+
+#### separated manual commands (bash):
+- _dev__up_docker_environment
+- _dev__initialize_database
+- _dev__start
 
 ## Database naming convention
 - Use underscore_names instead of CamelCase
