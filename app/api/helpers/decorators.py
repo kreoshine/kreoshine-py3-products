@@ -38,13 +38,14 @@ def rest_handler_decorated(
             try:
                 logger.info('%s', call_action)
                 ret = await fn(handler_instance)
-                logger.debug(
-                    "[%s] result time: %d ms", call_action, round((datetime.now() - start_time).total_seconds() * 1000)
-                )
                 return ret
             except Exception:  # pylint: disable = broad-exception
                 logger.exception('[%s] unexpected exception: \n%s', call_action, format_exc())
                 raise
+            finally:
+                logger.debug(
+                    "[%s] result time: %d ms", call_action, round((datetime.now() - start_time).total_seconds() * 1000)
+                )
         return _async_wrapper
     return _async_parametrized_deco
 
