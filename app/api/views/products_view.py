@@ -5,6 +5,7 @@ import logging
 
 from aiohttp.web import View
 from aiohttp.web_response import Response, json_response
+from aiohttp_cors import CorsViewMixin
 
 from app.api import const
 from app.api.helpers import QueryParamsParser
@@ -17,7 +18,7 @@ logger = logging.getLogger('service')
 
 
 @rest_view_decorated(rest_handler_decorated(logger))
-class ProductsView(View):
+class ProductsView(View, CorsViewMixin):
     """ API for '/products' route """
 
     @property

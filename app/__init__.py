@@ -6,6 +6,7 @@ import logging.config
 import sys
 
 from aiohttp import web
+from aiohttp_cors import setup, ResourceOptions
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 import db
@@ -76,6 +77,16 @@ def create_app() -> web.Application:
     )
 
     app.add_routes(routes_definition)
+
+    cors = setup(app, defaults={
+        "*": ResourceOptions(
+            allow_credentials=True,
+            expose_headers="*",
+            allow_headers="*",
+        )
+    })
+    for route in list(app.router.routes()):
+        cors.add(route)
 
     logger.debug(f"registered resources: {[resource.get_info().get('path') for resource in app.router.resources()]}")
 
