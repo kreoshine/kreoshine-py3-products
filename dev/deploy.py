@@ -1,6 +1,8 @@
 """
 Development deploy running module
 """
+import os.path
+import shutil
 import subprocess
 
 from alembic.command import upgrade
@@ -9,9 +11,10 @@ from sqlalchemy_utils import database_exists, create_database
 
 from app.__main__ import start_service
 from dev.utils.echo import *
-from dev.utils.logging import use_tmp_dir_for_logs
-from settings import PROJECT_ROOT_PATH
+from settings import config, PROJECT_ROOT_PATH
 from tests.plugins.database import get_database_url, create_enrich_alembic_config
+
+TMP_DIR = PROJECT_ROOT_PATH / 'tmp'
 
 
 def _up_docker_environment():
@@ -76,13 +79,45 @@ def __configure_environment():
             fp.write(environment_mode_line)
 
 
+def __create_tmp_dir():
+    if not os.path.exists(TMP_DIR):
+        os.mkdir(TMP_DIR)
+
+
+def __use_tmp_dir_for_logs(need_to_clear_logs: bool = True):
+    """ Updates file paths for logging
+
+    Args:
+        need_to_clear_logs: boolean reflecting need to remove all logs, by default True
+
+    Side effects:
+        - clear log files before applying
+        - new path definition for logging (PROJECT_DIR/tmp/logs/)
+     """
+    assert config.deploy.mode == 'development'
+
+    log_dir = TMP_DIR / 'logs'
+
+    if os.path.exists(log_dir) and need_to_clear_logs:
+        shutil.rmtree(log_dir)
+
+    if not os.path.exists(log_dir):
+        os.mkdir(log_dir)
+
+    handlers = config.logging['handlers']
+    for handler_name, handler_data in handlers.items():
+        handler_data['filename'] = str(log_dir / f'{handler_name}.log')
+
+
 def _perform_dev_start():
     """ Performs service start for development
     
     Side effects:
         - creation necessary environment
+        - creation temporary directory if necessary
         - configuring logging in 'tmp' directory
     """
     __configure_environment()
-    use_tmp_dir_for_logs()
+    __create_tmp_dir()
+    __use_tmp_dir_for_logs()
     start_service()
