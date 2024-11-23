@@ -4,5 +4,6 @@ host = "127.0.0.1"
 port = 8081
 client_max_size_bytes = "5242880"
 
+[default.app.endpoints]
 products = '/api/products'
 product-details = '/api/product-details'
