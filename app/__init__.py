@@ -13,11 +13,6 @@ import db
 from app.api.views import ProductsView
 from db.dao import ProductsDAO
 
-try:
-    from dev.utils import log_utils
-except ImportError:
-    log_utils = None
-
 from settings import config
 
 logger = logging.getLogger('service')
@@ -30,9 +25,6 @@ def __configure_logging() -> None:
         - (dev) updates log paths for 'development' deploy mode
         - apply except-hook for unexpected errors
     """
-    if config.deploy.mode == 'development':
-        log_utils.use_tmp_dir_for_logs()
-
     logging.config.dictConfig(config=config.logging)
 
     def _handle_exception(exc_type, exc_value, exc_traceback) -> None:

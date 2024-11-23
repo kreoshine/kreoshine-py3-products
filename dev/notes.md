@@ -40,7 +40,7 @@ _dev__initialize_database
 
 Now application can be started:
 ``` bash
-start
+_dev__start
 ```
 
 ## Database naming convention

@@ -7,7 +7,9 @@ from alembic.command import upgrade
 from sqlalchemy import create_engine, inspect, make_url
 from sqlalchemy_utils import database_exists, create_database
 
+from app.__main__ import start_service
 from dev.utils.echo import *
+from dev.utils.logging import use_tmp_dir_for_logs
 from settings import PROJECT_ROOT_PATH
 from tests.plugins.database import get_database_url, create_enrich_alembic_config
 
@@ -52,3 +54,13 @@ def _initialize_database():
     with engine.connect() as conn:
         inspector = inspect(conn)
         assert 'products' in inspector.get_table_names()
+
+
+def _perform_dev_start():
+    """ Performs service start for development
+    
+    Side effects:
+        - configuring logging in 'tmp' directory
+    """
+    use_tmp_dir_for_logs()
+    start_service()
