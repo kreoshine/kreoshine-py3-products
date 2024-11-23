@@ -12,11 +12,6 @@ git clone git@github.com:kreoshine/kreoshine-py3-products.git
 cd kreoshine-py3-products
 ```
 
-- Create environment-mode for dynaconf in '.env' file
-``` bash
-echo 'export KREOSHINE_ENV=DEVELOPMENT' >settings/config/.env
-```
-
 - Create python virtual environment (with pip support, e.g. 'venv' or via 'conda')
 
 After environment preparation install requirements with fixed version

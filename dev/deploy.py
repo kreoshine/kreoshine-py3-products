@@ -56,11 +56,33 @@ def _initialize_database():
         assert 'products' in inspector.get_table_names()
 
 
+def __configure_environment():
+    environment_file_path = PROJECT_ROOT_PATH / "settings/config/.env"
+    environment_mode_line = "export KREOSHINE_ENV=DEVELOPMENT"
+    try:
+        need_to_add_environment_mode_line = True
+        with open(environment_file_path, 'r') as fp:
+            for line in fp.readlines():
+                if line == environment_mode_line:
+                    need_to_add_environment_mode_line = False
+        is_environment_file_exists = True
+    except FileNotFoundError:
+        is_environment_file_exists = False
+        need_to_add_environment_mode_line = True
+
+    if need_to_add_environment_mode_line:
+        mode = 'a+' if is_environment_file_exists else 'w'
+        with open(environment_file_path, mode) as fp:
+            fp.write(environment_mode_line)
+
+
 def _perform_dev_start():
     """ Performs service start for development
     
     Side effects:
+        - creation necessary environment
         - configuring logging in 'tmp' directory
     """
+    __configure_environment()
     use_tmp_dir_for_logs()
     start_service()
