@@ -25,23 +25,24 @@ def parse_query_params(
     Raises:
         HTTPBadRequest: when incorrect query params provided
     """
-    query_params = {}
+    parsed_query_params = {}
     if not raw_query_params:
-        return query_params
+        return parsed_query_params
 
-    for key, value in raw_query_params.items():
+    for key, value in raw_query_params.items():  # type: str, str
+        if key in parsed_query_params:
+            raise HTTPBadRequest(reason="non-unique query parameters are not supported")
         if key in params_with_list_values:
             if ',' in value:
-                value = value.split(',')
+                normalized_value = [item.strip() for item in value.split(',')]
             else:
-                value = [value]
-        if key not in query_params:
-            query_params[key] = value
+                normalized_value = [value.strip()]
         else:
-            raise HTTPBadRequest(reason="non-unique query parameters are not supported")
+            normalized_value = value.strip()
+        parsed_query_params[key] = normalized_value
 
     validator = Validator(validation_schema)
-    validator.validate(query_params)
+    validator.validate(parsed_query_params)
     if validator.errors:
         raise HTTPBadRequest(reason=validator.errors)
     return validator.document
