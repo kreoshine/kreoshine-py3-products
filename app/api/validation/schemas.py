@@ -1,10 +1,14 @@
 """
-Validation for 'products' view
+Validation schemas
 """
 from app.api import const
 
-PRODUCTS_QUERY_PARAMS__GET__SCHEMA = {
+QUERY_PARAMS_SCHEMA__GET_PRODUCTS = {
     const.query.keys.FIELDS: {
+        # normalization
+        'coerce': 'to_list_from_comma_separated_string',
+
+        # validation
         'type': 'list',
         'required': True,
         'schema': {
