@@ -14,7 +14,7 @@ QUERY_PARAMS_VALIDATION_SCHEMA__GET_PRODUCTS = {
         'unique_items': True,
         'schema': {
             'type': 'string',
-            'coerce': 'to_snake_from_camel',
+            'coerce': ('strip', 'to_snake_from_camel'),
             'allowed': list(Product.metadata.tables['products'].columns.keys())
         }
     },
