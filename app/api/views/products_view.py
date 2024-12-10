@@ -33,7 +33,19 @@ class ProductsView(View, CorsViewMixin, ValidationMixin):
         Retrieves products info from database
 
         Supported query params:
-            - fields — specifies fields to be requested
+            - fields — specifies fields to be requested, e.g. '?fields=name,type''
+
+        Product structure in response:
+            ``` json
+            [
+                {
+                    'product_id': 'some-uuid',
+                    'type': 'some-type',
+                    'name': 'some localized product name'
+                },
+                {...},
+            ]
+            ```
         """
         query_params = self.get_validated_query_params(
             query_params=self.request.rel_url.query,
