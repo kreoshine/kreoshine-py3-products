@@ -16,7 +16,21 @@ QUERY_PARAMS_SCHEMA__GET_PRODUCTS = {
             'allowed': [
                 const.query.values.TYPE,
                 const.query.values.NAME,
+                const.query.values.PRODUCT_ID,
             ]
         }
+    },
+}
+
+NORMALIZATION_SCHEMA__PRODUCT = {
+    const.query.values.PRODUCT_ID: {
+        'coerce': 'to_string_from_uuid',
+        'type': 'string',
+    },
+    const.query.values.TYPE: {
+        'type': 'string',
+    },
+    const.query.values.NAME: {
+        'type': 'string',
     },
 }

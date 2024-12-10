@@ -9,8 +9,7 @@ from aiohttp_cors import CorsViewMixin
 
 from app.api import const
 from app.api.helpers.decorators import rest_view_decorated
-from app.api.helpers.serialization import custom_dumps
-from app.api.validation.schemas import QUERY_PARAMS_SCHEMA__GET_PRODUCTS
+from app.api.validation.schemas import QUERY_PARAMS_SCHEMA__GET_PRODUCTS, NORMALIZATION_SCHEMA__PRODUCT
 from app.api.views.mixins import ValidatorMixin
 from db.dao import ProductsDAO
 
@@ -31,7 +30,7 @@ class ProductsView(View, CorsViewMixin, ValidatorMixin):
         Retrieves products info from database
 
         Supported query params:
-            - field — specifies fields to be requested
+            - fields — specifies fields to be requested
         """
         query_params = self.get_normalized_query_params(
             query_params=self.request.rel_url.query,
@@ -42,6 +41,11 @@ class ProductsView(View, CorsViewMixin, ValidatorMixin):
             query_fields=query_params.get(const.query.FIELDS),
         )
         return json_response(
-            products_db_data,
-            dumps=custom_dumps,
+            [
+                self.get_normalized_data(
+                    data=product,
+                    normalization_schema=NORMALIZATION_SCHEMA__PRODUCT
+                )
+                for product in products_db_data
+            ]
         )
