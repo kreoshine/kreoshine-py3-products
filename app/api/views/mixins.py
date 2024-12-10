@@ -29,8 +29,12 @@ class ValidationMixin:
         Returns:
             parsed params as a native python object
         Raises:
-            HTTPBadRequest: when incorrect query params provided
+            HTTPBadRequest: when incorrect query params provided:
+                - due to duplicated keys in query params (not allowed)
+                - due to validation error
         """
+        if len(set(query_params.keys())) < len(query_params.keys()):
+            raise HTTPBadRequest(reason="duplicate param keys not allowed")
         validator = CustomValidator(validation_schema)
         validator.validate(dict(query_params))
         if validator.errors:
