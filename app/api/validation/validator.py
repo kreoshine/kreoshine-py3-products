@@ -14,7 +14,17 @@ class CustomValidator(Validator):
         """ Normalization rule (prefix `_normalize_coerce_`)
         that converts string separated by comma to list
         """
-        return [item.strip() for item in value.split(',')]
+        return [item for item in value.split(',')]
+
+    def _normalize_coerce_strip(self, value: str):
+        """ Normalization rule (prefix `_normalize_coerce_`)
+        that remove leading and trailing whitespaces
+        """
+        if not isinstance(value, str):
+            self._error("'strip' require 'str' type")
+            return
+
+        return value.strip()
 
     @staticmethod
     def _normalize_coerce_to_string_from_uuid(value: UUID):

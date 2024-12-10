@@ -13,6 +13,7 @@ QUERY_PARAMS_VALIDATION_SCHEMA__GET_PRODUCTS = {
         'required': True,
         'schema': {
             'type': 'string',
+            'coerce': 'strip',
             'allowed': [
                 const.query.values.TYPE,
                 const.query.values.NAME,
