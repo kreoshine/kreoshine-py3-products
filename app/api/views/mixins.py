@@ -42,22 +42,23 @@ class ValidationMixin:
         return validator.document
 
     @staticmethod
-    def get_normalized_data(data: dict, normalization_schema: dict) -> dict:
-        """ Method to normalize data
-
-        Note: provides serialization support
+    def get_normalized_data(data: list | dict, structure_for_normalization: dict) -> dict:
+        """ Method to normalize data for
+            - serialization support
 
         Args:
             data: data to normalize
-            normalization_schema: schema to be used for data normalization
-
+            structure_for_normalization: structure to be used for schema completing to normalize data;
+                note: enriching is necessary to define data as dictionary (according to Cerberus abilities)
         Returns:
             normalized data as native python object (dictionary)
         Raises:
             HTTPInternalServerError: when error occurred on serialization
         """
+        normalization_schema = {'data': structure_for_normalization}
+        enrich_data = {'data': data}
         validator = CustomValidator(normalization_schema)
-        validator.validate(data)
+        validator.validate(enrich_data)
         if validator.errors:
             raise HTTPInternalServerError(reason=f'error on serialization ({validator.errors})')
-        return validator.document
+        return validator.document['data']

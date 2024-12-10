@@ -11,7 +11,7 @@ from app.api import const
 from app.api.helpers.decorators import rest_view_decorated
 from app.api.validation.schemas import (
     QUERY_PARAMS_VALIDATION_SCHEMA__GET_PRODUCTS,
-    NORMALIZATION_SCHEMA__PRODUCT,
+    RESPONSE_JSON__NORMALIZATION_STRUCTURE__PRODUCTS,
 )
 from app.api.views.mixins import ValidationMixin
 from db.dao import ProductsDAO
@@ -56,11 +56,8 @@ class ProductsView(View, CorsViewMixin, ValidationMixin):
             query_fields=query_params.get(const.query.FIELDS),
         )
         return json_response(
-            [
-                self.get_normalized_data(
-                    data=product,
-                    normalization_schema=NORMALIZATION_SCHEMA__PRODUCT
-                )
-                for product in products_db_data
-            ]
+            data=self.get_normalized_data(
+                products_db_data,
+                structure_for_normalization=RESPONSE_JSON__NORMALIZATION_STRUCTURE__PRODUCTS
+            )
         )

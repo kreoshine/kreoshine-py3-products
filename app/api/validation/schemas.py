@@ -24,15 +24,22 @@ QUERY_PARAMS_VALIDATION_SCHEMA__GET_PRODUCTS = {
     },
 }
 
-NORMALIZATION_SCHEMA__PRODUCT = {
-    const.query.values.PRODUCT_ID: {
-        'coerce': 'to_string_from_uuid',
-        'type': 'string',
-    },
-    const.query.values.TYPE: {
-        'type': 'string',
-    },
-    const.query.values.NAME: {
-        'type': 'string',
-    },
+RESPONSE_JSON__NORMALIZATION_STRUCTURE__PRODUCTS = {
+    # note: this is invalid schema and may be used only for custom normalization
+    'type': 'list',
+    'schema': {
+        'type': 'dict',
+        'schema': {
+            const.query.values.PRODUCT_ID: {
+                'coerce': 'to_string_from_uuid',
+                'type': 'string',
+            },
+            const.query.values.TYPE: {
+                'type': 'string',
+            },
+            const.query.values.NAME: {
+                'type': 'string',
+            },
+        }
+    }
 }
