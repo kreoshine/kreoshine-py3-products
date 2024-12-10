@@ -11,6 +11,7 @@ QUERY_PARAMS_VALIDATION_SCHEMA__GET_PRODUCTS = {
         # validation
         'type': 'list',
         'required': True,
+        'unique_items': True,
         'schema': {
             'type': 'string',
             'coerce': 'strip',
