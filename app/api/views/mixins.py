@@ -8,15 +8,15 @@ from aiohttp.web_exceptions import HTTPBadRequest, HTTPInternalServerError
 from app.api.validation.validator import CustomValidator
 
 
-class ValidatorMixin:
+class ValidationMixin:
     """ Provides useful methods for validation and normalization """
 
     @staticmethod
-    def get_normalized_query_params(
+    def get_validated_query_params(
             query_params: Mapping,
             validation_schema: dict,
     ) -> dict[str, str | list]:
-        """ Method to get parsed query params
+        """ Method to get validated query params
 
         Note: method is not support multiple keys to combine list
             e.g. '?fields=name,fields=type' -> '{fields: [name, type]}'
@@ -39,14 +39,16 @@ class ValidatorMixin:
 
     @staticmethod
     def get_normalized_data(data: dict, normalization_schema: dict) -> dict:
-        """ Method to normalize data for response
+        """ Method to normalize data
+
+        Note: provides serialization support
 
         Args:
             data: data to normalize
             normalization_schema: schema to be used for data normalization
 
         Returns:
-            normalize data a native python object (dictionary)
+            normalized data as native python object (dictionary)
         Raises:
             HTTPInternalServerError: when error occurred on serialization
         """

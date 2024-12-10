@@ -3,7 +3,7 @@ Validation schemas
 """
 from app.api import const
 
-QUERY_PARAMS_SCHEMA__GET_PRODUCTS = {
+QUERY_PARAMS_VALIDATION_SCHEMA__GET_PRODUCTS = {
     const.query.keys.FIELDS: {
         # normalization
         'coerce': 'to_list_from_comma_separated_string',

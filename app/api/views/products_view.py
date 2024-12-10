@@ -9,15 +9,18 @@ from aiohttp_cors import CorsViewMixin
 
 from app.api import const
 from app.api.helpers.decorators import rest_view_decorated
-from app.api.validation.schemas import QUERY_PARAMS_SCHEMA__GET_PRODUCTS, NORMALIZATION_SCHEMA__PRODUCT
-from app.api.views.mixins import ValidatorMixin
+from app.api.validation.schemas import (
+    QUERY_PARAMS_VALIDATION_SCHEMA__GET_PRODUCTS,
+    NORMALIZATION_SCHEMA__PRODUCT,
+)
+from app.api.views.mixins import ValidationMixin
 from db.dao import ProductsDAO
 
 logger = logging.getLogger('service')
 
 
 @rest_view_decorated(logger)
-class ProductsView(View, CorsViewMixin, ValidatorMixin):
+class ProductsView(View, CorsViewMixin, ValidationMixin):
     """ REST API for '/api/products' route """
 
     @property
@@ -32,9 +35,9 @@ class ProductsView(View, CorsViewMixin, ValidatorMixin):
         Supported query params:
             - fields — specifies fields to be requested
         """
-        query_params = self.get_normalized_query_params(
+        query_params = self.get_validated_query_params(
             query_params=self.request.rel_url.query,
-            validation_schema=QUERY_PARAMS_SCHEMA__GET_PRODUCTS,
+            validation_schema=QUERY_PARAMS_VALIDATION_SCHEMA__GET_PRODUCTS,
         )
         logger.debug("Normalized query params: %s", query_params)
         products_db_data = await self._products_dao.query(
