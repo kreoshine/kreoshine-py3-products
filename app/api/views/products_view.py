@@ -19,7 +19,7 @@ logger = logging.getLogger('service')
 
 @rest_view_decorated(logger)
 class ProductsView(View, CorsViewMixin, ValidatorMixin):
-    """ API for '/api/products' route """
+    """ REST API for '/api/products' route """
 
     @property
     def _products_dao(self) -> ProductsDAO:
