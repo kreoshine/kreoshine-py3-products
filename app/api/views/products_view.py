@@ -8,7 +8,7 @@ from aiohttp.web_response import Response, json_response
 from aiohttp_cors import CorsViewMixin
 
 from app.api import const
-from app.api.helpers.decorators import rest_view_decorated, rest_handler_decorated
+from app.api.helpers.decorators import rest_view_decorated
 from app.api.helpers.serialization import custom_dumps
 from app.api.validation.schemas import QUERY_PARAMS_SCHEMA__GET_PRODUCTS
 from app.api.views.mixins import ValidatorMixin
@@ -17,7 +17,7 @@ from db.dao import ProductsDAO
 logger = logging.getLogger('service')
 
 
-@rest_view_decorated(rest_handler_decorated(logger))
+@rest_view_decorated(logger)
 class ProductsView(View, CorsViewMixin, ValidatorMixin):
     """ API for '/api/products' route """
 

@@ -12,7 +12,7 @@ from aiohttp.web_request import Request
 from aiohttp.web_urldispatcher import View
 
 
-def rest_handler_decorated(
+def handler_decorated(
         logger: logging.Logger,
 ) -> Callable:
     """ Decorator for wrapping REST handlers
@@ -50,18 +50,19 @@ def rest_handler_decorated(
     return _async_parametrized_deco
 
 
-def rest_view_decorated(decorator: Callable) -> Callable:
+def rest_view_decorated(logger: logging.Logger) -> Callable:
     """
     Decorates for REST methods of a view
 
     Args:
-        decorator: decorator to be applied for all REST methods
+        logger: logger to use
 
     Returns:
         class decorator
 
     """
     allowed_rest_methods = {'get', 'post', 'patch', 'delete', 'put'}
+    decorator = handler_decorated(logger)
 
     def class_decorator(cls):
         for name, method in inspect.getmembers(cls):
