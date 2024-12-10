@@ -56,3 +56,22 @@ class CustomValidator(Validator):
         that converts UUID to string
         """
         return str(value)
+
+    def _normalize_coerce_to_snake_from_camel(self, value: str):
+        """ Normalization rule (prefix `_normalize_coerce_`)
+        that change 'camelCase' to 'snake_case'
+        """
+        if not isinstance(value, str):
+            self._error(f"'to_snake_from_camel' rule require 'str' type for '{value}' value")
+            return
+        return ''.join([f'_{i.lower()}' if i.isupper() else i for i in value]).lstrip('_')
+
+    def _normalize_coerce_to_camel_from_snake(self, value: str):
+        """ Normalization rule (prefix `_normalize_coerce_`)
+        that change 'snake_case' to 'camelCase'
+        """
+        if not isinstance(value, str):
+            self._error(f"'to_camel_from_snake' rule require 'str' type for '{value}' value")
+            return
+        parts = value.split('_')
+        return parts[0] + ''.join(part.capitalize() for part in parts[1:])

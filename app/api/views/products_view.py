@@ -39,7 +39,7 @@ class ProductsView(View, CorsViewMixin, ValidationMixin):
             ``` json
             [
                 {
-                    'product_id': 'some-uuid',
+                    'productId': 'some-uuid',
                     'type': 'some-type',
                     'name': 'some localized product name'
                 },

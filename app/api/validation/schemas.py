@@ -2,6 +2,7 @@
 Validation schemas
 """
 from app.api import const
+from db.models import Product
 
 QUERY_PARAMS_VALIDATION_SCHEMA__GET_PRODUCTS = {
     const.query.keys.FIELDS: {
@@ -14,12 +15,8 @@ QUERY_PARAMS_VALIDATION_SCHEMA__GET_PRODUCTS = {
         'unique_items': True,
         'schema': {
             'type': 'string',
-            'coerce': 'strip',
-            'allowed': [
-                const.query.values.TYPE,
-                const.query.values.NAME,
-                const.query.values.PRODUCT_ID,
-            ]
+            'coerce': 'to_snake_from_camel',
+            'allowed': list(Product.metadata.tables['products'].columns.keys())
         }
     },
 }
@@ -29,6 +26,10 @@ RESPONSE_JSON__NORMALIZATION_STRUCTURE__PRODUCTS = {
     'type': 'list',
     'schema': {
         'type': 'dict',
+        'keysrules': {
+            'type': 'string',
+            'coerce': 'to_camel_from_snake',
+        },
         'schema': {
             const.query.values.PRODUCT_ID: {
                 'coerce': 'to_string_from_uuid',
