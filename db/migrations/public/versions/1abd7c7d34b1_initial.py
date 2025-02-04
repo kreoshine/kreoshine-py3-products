@@ -20,13 +20,12 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     op.create_table(
-        'products',
-        sa.Column('product_id', sa.UUID),
+        'product',
+        sa.Column('id', sa.UUID, primary_key=True),
         sa.Column('type', sa.String),
         sa.Column('name', sa.String),
-        sa.PrimaryKeyConstraint('product_id', name='products__pk'),
     )
 
 
 def downgrade() -> None:
-    op.drop_table('products')
+    op.drop_table('product')

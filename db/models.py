@@ -2,8 +2,7 @@
 Module with database ORM models
 """
 
-from sqlalchemy import UUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped
 
 from db import BaseModel
 
@@ -12,8 +11,7 @@ class Product(BaseModel):
     """
     Model for product
     """
-    __tablename__ = 'products'
+    __tablename__ = 'product'
 
-    product_id: Mapped[str] = mapped_column(UUID, primary_key=True)
     name: Mapped[str]
     type: Mapped[str]

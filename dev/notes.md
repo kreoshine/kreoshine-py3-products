@@ -39,12 +39,10 @@ perform_dev_deploy
 
 ## Database naming convention
 - Use underscore_names instead of CamelCase
-- Table names should be plural
-- Spell out id fields (item_id instead of id)
+- Table names should be singular
+- Short id fields (id instead of item_id)
 - Don't use ambiguous column names
 - Try to name foreign key columns the same as the columns they refer to
-
-explanation [why](https://dev.to/ovid/database-naming-standards-2061)
 
 ### Creation new revisions
 - manually (sure that CWD is 'PROJECT_ROOT_PATH/db')

@@ -1,9 +1,9 @@
 """
 Package with database logic
 """
-from sqlalchemy import MetaData, URL
+from sqlalchemy import MetaData, URL, UUID
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from settings import config
 
@@ -11,8 +11,9 @@ metadata = MetaData()
 
 
 class BaseModel(DeclarativeBase):
-    """ Base class for models"""
+    """ Base class for models """
     metadata = metadata
+    id: Mapped[str] = mapped_column(UUID, primary_key=True)
 
 
 def get_database_url() -> URL:

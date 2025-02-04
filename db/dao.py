@@ -7,11 +7,12 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncEngine
 from sqlalchemy.orm import QueryableAttribute
 
+from db import metadata
 from db.models import Product
 
 
-class ProductsDAO:
-    """ Data Access Object of products
+class ProductDAO:
+    """ Data Access Object of product
 
     Provides async methods for interacting with the database
     """
@@ -27,8 +28,8 @@ class ProductsDAO:
         return {
             column_name: column for column_name, column
             in zip(
-                Product.metadata.tables['products'].columns.keys(),
-                Product.metadata.tables['products'].columns
+                metadata.tables[Product.__tablename__].columns.keys(),
+                metadata.tables[Product.__tablename__].columns
             )
         }
 
