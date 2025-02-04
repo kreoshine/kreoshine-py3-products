@@ -4,6 +4,8 @@ Validation schemas
 from app.api import const
 from db.models import Product
 
+ALLOWED_PRODUCT_FIELDS = list(Product.metadata.tables[Product.__tablename__].columns.keys())
+
 QUERY_PARAMS_VALIDATION_SCHEMA__GET_PRODUCTS = {
     const.query.keys.FIELDS: {
         # normalization
@@ -14,8 +16,8 @@ QUERY_PARAMS_VALIDATION_SCHEMA__GET_PRODUCTS = {
         'unique_items': True,
         'schema': {
             'type': 'string',
-            'coerce': ('strip', 'to_snake_from_camel'),
-            'allowed': list(Product.metadata.tables['products'].columns.keys())
+            'coerce': ('strip', 'to_snake_from_camel'),  # normalization
+            'allowed': ALLOWED_PRODUCT_FIELDS
         }
     },
 }
