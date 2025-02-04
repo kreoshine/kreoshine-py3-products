@@ -6,4 +6,3 @@ client_max_size_bytes = "5242880"
 
 [default.app.endpoints]
 products = '/api/products'
-product-details = '/api/product-details'
