@@ -16,7 +16,7 @@ class BaseModel(DeclarativeBase):
 
 
 def get_database_url() -> URL:
-    """ Forms database URL by config """
+    """ Forms database URL by Dynaconf config """
     driver_name = config.db.driver
     if config.db.get('dialect') and config.db.dialect:
         driver_name += f'+{config.db.dialect}'

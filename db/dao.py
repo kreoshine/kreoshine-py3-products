@@ -23,7 +23,7 @@ class ProductsDAO:
         self._engine = engine
 
     @property
-    def _product_columns_mapper(self) -> dict[str, QueryableAttribute]:
+    def _names_to_columns_map(self) -> dict[str, QueryableAttribute]:
         return {
             column_name: column for column_name, column
             in zip(
@@ -36,12 +36,21 @@ class ProductsDAO:
             self,
             query_fields: Optional[List[str]] = None,
     ) -> List[dict]:
-        """ todo """
+        """ Executes a database query over ORM to retrieve entities
+
+        Note: query is executed without a transaction
+
+        Args:
+            query_fields: names of columns to query, optional;
+                note: if not passed all columns will be retrieved
+        Returns:
+            list with queried entities as dicts
+        """
         if query_fields:
-            query_columns = [self._product_columns_mapper[column_name] for column_name in query_fields]
+            query_columns = [self._names_to_columns_map[fields_name] for fields_name in query_fields]
             stmt = select(*query_columns)
         else:
-            query_fields = self._product_columns_mapper.keys()
+            query_fields = self._names_to_columns_map.keys()
             stmt = select(Product)
 
         async with self._engine.connect() as conn:
