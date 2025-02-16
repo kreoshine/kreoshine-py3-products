@@ -12,7 +12,7 @@ from sqlalchemy_utils import database_exists, create_database
 from app.__main__ import start_service
 from dev.utils.echo import *
 from settings import config, PROJECT_ROOT_PATH
-from tests.plugins.database import get_database_url, create_enrich_alembic_config
+from tests.plugins.database import get_database_url, create_enriched_alembic_config
 
 TMP_DIR = PROJECT_ROOT_PATH / 'tmp'
 
@@ -50,7 +50,7 @@ def _initialize_database():
     brew_step("database migrations")
     for schema in schemas_to_upgrade:
         echo_header(f"perform migration for '{schema}' schema")
-        alembic_config = create_enrich_alembic_config(database_url, section_name=schema)
+        alembic_config = create_enriched_alembic_config(database_url, section_name=schema)
         upgrade(alembic_config, 'head')
 
     engine = create_engine(database_url)

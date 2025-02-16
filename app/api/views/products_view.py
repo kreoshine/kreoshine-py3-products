@@ -52,7 +52,7 @@ class ProductsView(View, CorsViewMixin, ValidationMixin):
             query_params=self.request.rel_url.query,
             validation_schema=QUERY_PARAMS_VALIDATION_SCHEMA__GET_PRODUCTS,
         )
-        logger.debug("Normalized query params: %s", query_params)
+        logger.debug("normalized query params: %s", query_params)
         products_db_data = await self._product_dao.query(
             query_fields=query_params.get(const.query.FIELDS),
         )

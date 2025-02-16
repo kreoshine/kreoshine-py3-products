@@ -24,6 +24,7 @@ def get_database_url(enrich_dbname_with_suffix: bool = False) -> str:
         enrich_dbname_with_suffix: boolean reflecting need to add 'test' suffix for database name, by default False
     Returns:
         database URL as string
+            note: raw string is required to make possible engine dev-creation
     """
     database_name = config.db.database_name
     if enrich_dbname_with_suffix:
@@ -63,7 +64,7 @@ def _created_test_database(_test_database_url: str) -> None:
     drop_database(_test_database_url)
 
 
-def create_enrich_alembic_config(database_url: str, section_name: str) -> AlembicConfig:
+def create_enriched_alembic_config(database_url: str, section_name: str) -> AlembicConfig:
     """ Creates config for alembic and enrich it with passed args
 
     Args:
@@ -110,7 +111,7 @@ def create_test_alembic_config(
         function for getting alembic config
     """
     def _create_test_alembic_config(section_name):
-        return create_enrich_alembic_config(
+        return create_enriched_alembic_config(
             database_url=_test_database_url,
             section_name=section_name,
         )

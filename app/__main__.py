@@ -8,7 +8,7 @@ from settings import config
 
 
 def start_service():
-    """ Entry point to  application """
+    """ Entry point for application start """
     web.run_app(
         app=create_app(),
         host=config.app['host'],

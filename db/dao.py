@@ -7,8 +7,8 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncEngine
 from sqlalchemy.orm import QueryableAttribute
 
-from db import metadata
 from db.models import Product
+from db.models.base import metadata
 
 
 class ProductDAO:

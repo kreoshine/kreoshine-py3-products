@@ -1,10 +1,9 @@
 """
 Module with database ORM models
 """
-
 from sqlalchemy.orm import Mapped
 
-from db import BaseModel
+from db.models.base import BaseModel
 
 
 class Product(BaseModel):
